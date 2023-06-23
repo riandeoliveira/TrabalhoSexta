@@ -1,0 +1,17 @@
+{
+  "name": "trabalho-sexta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "clear && node .",
+    "test": "clear && jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^29.5.0",
+    "prompt-sync": "^4.2.0"
+  }
+}
