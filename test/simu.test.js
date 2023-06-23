@@ -1,4 +1,4 @@
-const simulacao = require("./simulacao");
+const simulacao = require("../src/simulacao");
 
 describe("Testes da Simulação", () => {
   test("Caso de Parada 1", () => {

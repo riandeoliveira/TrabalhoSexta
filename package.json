@@ -2,9 +2,9 @@
   "name": "trabalho-sexta",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/simulacao.js",
   "scripts": {
-    "start": "clear && node .",
+    "start": "clear && node src/index.js",
     "test": "clear && jest"
   },
   "keywords": [],
