@@ -1,5 +1,8 @@
 const estados = require("./estados");
 
+/**
+ * Menu interativo do sistema.
+ */
 class Menu {
   estados;
 
@@ -7,6 +10,9 @@ class Menu {
     this.estados = estados;
   }
 
+  /**
+   * Exibe todos os estados em tempo real.
+   */
   exibirEstados() {
     console.clear();
     console.log(`

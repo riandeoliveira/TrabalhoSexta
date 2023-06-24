@@ -2,6 +2,9 @@ const eventos = require("./eventos");
 const estados = require("./estados");
 const servidor = require("./servidor");
 
+/**
+ * Classe para iniciar a simulação e suas rotinas.
+ */
 class Simulacao {
   estados;
 
@@ -9,6 +12,10 @@ class Simulacao {
     this.estados = estados;
   }
 
+  /**
+   * Método para uso durante os testes automatizados.
+   * @param {number} parada
+   */
   debugar(parada) {
     this.resetarEstados();
 
@@ -26,6 +33,9 @@ class Simulacao {
     return this.estados;
   }
 
+  /**
+   * Método para iniciar a simulação.
+   */
   iniciar() {
     for (let i in eventos) {
       let indice = Number(i);
@@ -40,6 +50,7 @@ class Simulacao {
   }
 
   /**
+   * Processar um evento de CHEGADA.
    * @param {eventos[0]} evento
    * @param {eventos[0]} proximoEvento
    */
@@ -66,6 +77,7 @@ class Simulacao {
   }
 
   /**
+   * Processar um evento de SAÍDA.
    * @param {eventos[0]} evento
    * @param {eventos[0]} proximoEvento
    */
@@ -95,6 +107,9 @@ class Simulacao {
     this.estados.clientes_atendidos++;
   }
 
+  /**
+   * Resetar todos os estados para seus valores iniciais.
+   */
   resetarEstados() {
     this.estados.status_servidor = 0;
     this.estados.numero_em_fila = 0;

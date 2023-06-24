@@ -1,3 +1,6 @@
+/**
+ * Estados e contadores do sistema.
+ */
 const estados = {
   status_servidor: 0,
   numero_em_fila: 0,

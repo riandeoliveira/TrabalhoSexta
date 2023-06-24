@@ -1,3 +1,6 @@
+/**
+ * Eventos do sistema que ocorrem durante a simulação.
+ */
 const eventos = [
   {
     tempo_chegada: 0.4,
