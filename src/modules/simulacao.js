@@ -1,6 +1,7 @@
 const eventos = require("./eventos");
 const estados = require("./estados");
 const servidor = require("./servidor");
+const geradorNPAs = require("./gerador-npas");
 
 /**
  * Classe para iniciar a simulação e suas rotinas.

@@ -1,4 +1,6 @@
 const estados = require("./estados");
+const prompt = require("prompt-sync")();
+const geradorNPAs = require("./gerador-npas");
 
 /**
  * Menu interativo do sistema.
@@ -8,6 +10,27 @@ class Menu {
 
   constructor() {
     this.estados = estados;
+  }
+
+  receberDadosNPAs() {
+    console.log("\nInsira os dados para a geração de NPAs:\n");
+
+    const x0 = Number(prompt("Insira o valor de x0: "));
+    const a = Number(prompt("Insira o valor de a: "));
+    const c = Number(prompt("Insira o valor de c: "));
+    const m = Number(prompt("Insira o valor de m: "));
+
+    const tempoMedioChegada = Number(prompt("Insira o tempo médio entre chegadas (exponencial): "));
+    const tempoMedioAtendimento = Number(prompt("Insira o tempo médio entre atendimentos (exponencial): "));
+    const tempoSimulacao = Number(prompt("Insira o tempo de simulação: "));
+
+    // Tempo médio entre chegadas (exponencial): 1 minuto
+    // ➢ Tempo médio de atendimento (exponencial): 0,5 minuto
+    // ➢ Tempo de simulação: 8 horas (480 minutos)
+
+    geradorNPAs.receberDados(x0, a, c, m);
+
+    console.log(geradorNPAs.gerarUm());
   }
 
   /**
