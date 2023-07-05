@@ -1,5 +1,6 @@
 import { entrada, extra } from "../repositories/Repositorio";
 import { eventoServico } from "./EventoServico";
+import { simulacaoServico } from "./SimulacaoServico";
 
 /**
  * Serviço para lidar com as sementes geradas do sistema.
