@@ -2,9 +2,9 @@
   "name": "trabalho-sexta",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.ts",
+  "main": "main.ts",
   "scripts": {
-    "start": "clear && ts-node src/main.ts",
+    "start": "clear && ts-node main.ts",
     "test": "clear && jest"
   },
   "keywords": [],
