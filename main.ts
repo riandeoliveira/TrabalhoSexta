@@ -1,6 +1,12 @@
 import PromptSync from "prompt-sync";
 
+type ProximoEvento = "C" | "S";
+
 const prompt = PromptSync();
+
+function aguardar(segundos: number): Promise<unknown> {
+  return new Promise((resolve) => setTimeout(resolve, segundos));
+}
 
 function gerarChegada(): number {
   let semente = (xi * a + c) % m;
@@ -55,7 +61,7 @@ let tempo_ultimo_evento = 0;
 let relogio_simulacao = 0;
 let proxima_saida: number = 9999999999;
 let fim_simulacao: boolean = false;
-let proximo_evento: "C" | "S" = "C";
+let proximo_evento: ProximoEvento = "C";
 let tempo_total_fila: number = 0;
 let area_sob_qt: number = 0;
 let area_sob_ut: number = 0;
@@ -161,36 +167,47 @@ function processarSaida(saida: number): void {
   clientes_atendidos++;
 }
 
-function alternarEvento(proximaChegada: number, proximaSaida: number): void {
-  if (proximaChegada <= proximaSaida) proximo_evento = "C";
-  else proximo_evento = "S";
+function avancarEvento(): ProximoEvento {
+  console.log("\nTemporizador:");
+  console.log(`Próxima chegada: ${proxima_chegada}`);
+  console.log(`Próxima saída: ${proxima_saida}`);
+
+  if (proxima_chegada <= proxima_saida) return "C";
+
+  return "S";
 }
 
-let indice: number = 0;
+async function iniciarSimulacao() {
+  let indice: number = 0;
 
-while (!fim_simulacao) {
-  exibirEstados();
+  while (!fim_simulacao) {
+    exibirEstados();
 
-  console.log(`Geração atual: ${indice + 1}`);
-  console.log("\nVocê deseja continuar a simulação (s/n)?\n");
+    console.log(`Geração atual: ${indice + 1}`);
+    console.log("\nVocê deseja continuar a simulação (s/n)?\n");
 
-  const continuarSimulacao: string = prompt("Resposta: ");
+    const continuarSimulacao: string = prompt("Resposta: ");
 
-  if (continuarSimulacao === "n" || continuarSimulacao === "N") {
-    fim_simulacao = true;
+    if (continuarSimulacao === "n" || continuarSimulacao === "N") {
+      fim_simulacao = true;
+    }
+
+    if (proximo_evento === "C") processarChegada(proxima_chegada);
+    else processarSaida(proxima_saida);
+
+    if (proxima_chegada > tempo_simulacao && proxima_saida === 9999999999) {
+      fim_simulacao = true;
+      relogio_simulacao = tempo_simulacao;
+    } else if (proxima_chegada > tempo_simulacao) {
+      proximo_evento = "S";
+    } else {
+      avancarEvento();
+    }
+
+    indice++;
+
+    await aguardar(2000);
   }
-
-  if (proximo_evento === "C") processarChegada(proxima_chegada);
-  else processarSaida(proxima_saida);
-
-  if (proxima_chegada > tempo_simulacao && proxima_saida === 9999999999) {
-    fim_simulacao = true;
-    relogio_simulacao = tempo_simulacao;
-  } else if (proxima_chegada > tempo_simulacao) {
-    proximo_evento = "S";
-  } else {
-    alternarEvento(proxima_chegada, proxima_saida);
-  }
-
-  indice++;
 }
+
+iniciarSimulacao();
