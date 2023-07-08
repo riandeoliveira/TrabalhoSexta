@@ -177,7 +177,7 @@ function avancarEvento(): ProximoEvento {
   return "S";
 }
 
-async function iniciarSimulacao() {
+async function iniciarSimulacao(): Promise<void> {
   let indice: number = 0;
 
   while (!fim_simulacao) {
@@ -190,6 +190,8 @@ async function iniciarSimulacao() {
 
     if (continuarSimulacao === "n" || continuarSimulacao === "N") {
       fim_simulacao = true;
+
+      break;
     }
 
     if (proximo_evento === "C") processarChegada(proxima_chegada);
@@ -198,15 +200,17 @@ async function iniciarSimulacao() {
     if (proxima_chegada > tempo_simulacao && proxima_saida === 9999999999) {
       fim_simulacao = true;
       relogio_simulacao = tempo_simulacao;
+
+      break;
     } else if (proxima_chegada > tempo_simulacao) {
       proximo_evento = "S";
     } else {
       avancarEvento();
+
+      await aguardar(1000);
     }
 
     indice++;
-
-    await aguardar(2000);
   }
 }
 
