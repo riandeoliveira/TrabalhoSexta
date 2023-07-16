@@ -28,31 +28,34 @@ function gerarSaida(): number {
   return numeroAleatorio;
 }
 
-// console.log("\nInsira os dados para a geração de NPAs:\n");
+console.log("\nInsira os dados para a geração de NPAs:\n");
 
-// let xi = Number(prompt("Insira o valor de xi: "));
-// let a = Number(prompt("Insira o valor de a: "));
-// let c = Number(prompt("Insira o valor de c: "));
-// let m = Number(prompt("Insira o valor de m: "));
+let xi = Number(prompt("Insira o valor de xi: "));
+let a = Number(prompt("Insira o valor de a: "));
+let c = Number(prompt("Insira o valor de c: "));
+let m = Number(prompt("Insira o valor de m: "));
 
-// let tempo_medio_chegada = Number(
-//   prompt("Insira o tempo médio entre chegadas (exponencial): ")
-// );
+let tempo_medio_chegada = Number(
+  prompt("Insira o tempo médio entre chegadas (exponencial): ")
+);
 
-// let tempo_medio_atendimento = Number(
-//   prompt("Insira o tempo médio entre atendimentos (exponencial): ")
-// );
+let tempo_medio_atendimento = Number(
+  prompt("Insira o tempo médio entre atendimentos (exponencial): ")
+);
 
-// let tempo_simulacao = Number(prompt("Insira o tempo de simulação (minutos): "));
+let tempo_simulacao = Number(prompt("Insira o tempo de simulação (minutos): "));
 
-let xi: number = 123456;
-let a: number = 1103515245;
-let c: number = 12345;
-let m: number = 2147483648;
+// Variáveis utilizadas pelo grupo
+//
+// let xi: number = 123456;
+// let a: number = 1103515245;
+// let c: number = 12345;
+// let m: number = 2147483648;
 
-let tempo_medio_chegada: number = 1;
-let tempo_medio_atendimento: number = 0.5;
-let tempo_simulacao: number = 480;
+// let tempo_medio_chegada: number = 1;
+// let tempo_medio_atendimento: number = 0.5;
+// let tempo_simulacao: number = 480;
+//
 
 let status_servidor: number = 0;
 let numero_em_fila: number = 0;
@@ -66,13 +69,15 @@ let tempo_total_fila: number = 0;
 let area_sob_qt: number = 0;
 let area_sob_ut: number = 0;
 let clientes_atendidos: number = 0;
-let x_ant: number = 0;
 let proxima_chegada: number = gerarChegada();
 
 /**
  * Exibe todos os estados em tempo real.
  */
 function exibirEstados(): void {
+  let proximaSaida: string | number =
+    proxima_saida !== 9999999999 ? proxima_saida.toFixed(2) : proxima_saida;
+
   console.clear();
   console.log(`
 =========================
@@ -81,17 +86,16 @@ function exibirEstados(): void {
 | Status do servidor:     ${status_servidor}
 | Nº em fila:             ${numero_em_fila}
 | Fila de chegada:        [ ${fila_chegada.join(", ")} ]
-| Tempo do último evento: ${tempo_ultimo_evento}
-| Relógio da simulação:   ${relogio_simulacao}
-| Próxima chegada:        ${proxima_chegada}
-| Próxima saída:          ${proxima_saida}
+| Tempo do último evento: ${tempo_ultimo_evento.toFixed(2)}
+| Relógio da simulação:   ${relogio_simulacao.toFixed(2)}
+| Próxima chegada:        ${proxima_chegada.toFixed(2)}
+| Próxima saída:          ${proximaSaida}
 | Fim da simulação:       ${fim_simulacao}
 | Próximo evento:         ${proximo_evento}
-| Tempo total da fila:    ${tempo_total_fila}
-| Área sob QT:            ${area_sob_qt}
-| Área sob UT:            ${area_sob_ut}
+| Tempo total da fila:    ${tempo_total_fila.toFixed(2)}
+| Área sob QT:            ${area_sob_qt.toFixed(2)}
+| Área sob UT:            ${area_sob_ut.toFixed(2)}
 | Clientes atendidos:     ${clientes_atendidos}
-| X ant:                  ${x_ant}
 =========================
   `);
 }
@@ -124,7 +128,7 @@ function removerDaFila(): void {
  * Processar um evento de CHEGADA.
  */
 function processarChegada(chegada: number): void {
-  relogio_simulacao += chegada;
+  relogio_simulacao = chegada;
 
   proxima_chegada = relogio_simulacao + gerarChegada();
 
@@ -147,7 +151,7 @@ function processarChegada(chegada: number): void {
  * Processar um evento de SAÍDA.
  */
 function processarSaida(saida: number): void {
-  relogio_simulacao += saida;
+  relogio_simulacao = saida;
 
   if (numero_em_fila > 0) {
     proxima_saida = relogio_simulacao + gerarSaida();
@@ -167,47 +171,70 @@ function processarSaida(saida: number): void {
   clientes_atendidos++;
 }
 
-function avancarEvento(): ProximoEvento {
+/**
+ * Alterna entre os eventos de chegada (C) e de saída (S).
+ */
+function alternarEvento(): ProximoEvento {
+  let proximaSaida: string | number =
+    proxima_saida !== 9999999999 ? proxima_saida.toFixed(2) : proxima_saida;
+
   console.log("\nTemporizador:");
-  console.log(`Próxima chegada: ${proxima_chegada}`);
-  console.log(`Próxima saída: ${proxima_saida}`);
+  console.log(`Próxima chegada: ${proxima_chegada.toFixed(2)}`);
+  console.log(`Próxima saída: ${proximaSaida}`);
 
   if (proxima_chegada <= proxima_saida) return "C";
 
   return "S";
 }
 
+/**
+ * Função de inicialização do programa.
+ */
 async function iniciarSimulacao(): Promise<void> {
   let indice: number = 0;
+  let avancarGeracoes: boolean = false;
+  let continuarExibindo: string = "";
 
-  while (!fim_simulacao) {
+  while (true) {
     exibirEstados();
 
     console.log(`Geração atual: ${indice + 1}`);
-    console.log("\nVocê deseja continuar a simulação (s/n)?\n");
+    console.log("\nVocê deseja continuar exibindo os dados (s/n)?\n");
 
-    const continuarSimulacao: string = prompt("Resposta: ");
+    if (!avancarGeracoes) {
+      continuarExibindo = prompt("Resposta: ");
+    }
 
-    if (continuarSimulacao === "n" || continuarSimulacao === "N") {
-      fim_simulacao = true;
-
-      break;
+    if (continuarExibindo === "n" || continuarExibindo === "N") {
+      avancarGeracoes = true;
     }
 
     if (proximo_evento === "C") processarChegada(proxima_chegada);
-    else processarSaida(proxima_saida);
+    if (proximo_evento === "S") processarSaida(proxima_saida);
 
     if (proxima_chegada > tempo_simulacao && proxima_saida === 9999999999) {
+      let tempoMedioEmFila: number = tempo_total_fila / clientes_atendidos;
+      let numeroMedioEmFila: number = area_sob_qt / tempo_simulacao;
+      let taxaDeOcupacao: number = (area_sob_ut / relogio_simulacao) * 100;
+
       fim_simulacao = true;
       relogio_simulacao = tempo_simulacao;
+
+      exibirEstados();
+
+      console.log(`Total de gerações: ${indice}\n`);
+
+      console.log(`Tempo médio em fila: ${tempoMedioEmFila.toFixed(2)}`);
+      console.log(`Número médio em fila: ${numeroMedioEmFila.toFixed(2)}`);
+      console.log(`Taxa de ocupação: ${taxaDeOcupacao.toFixed(2)}%\n`);
 
       break;
     } else if (proxima_chegada > tempo_simulacao) {
       proximo_evento = "S";
     } else {
-      avancarEvento();
+      proximo_evento = alternarEvento();
 
-      await aguardar(1000);
+      if (!avancarGeracoes) await aguardar(2000);
     }
 
     indice++;
